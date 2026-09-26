@@ -5,31 +5,101 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FEDECOMPU ECUADOR</title>
 <style>
-body{font-family:Arial,sans-serif;background:#f0f4ff;margin:0;padding:0}
-.header{background:linear-gradient(90deg,#0033A0 0%,#FFD100 100%);color:white;padding:25px;text-align:center}
-.header h1{margin:0;font-size:32px}
-.header p{margin:5px 0 0}
-.container{max-width:450px;margin:40px auto;background:white;padding:30px;border-radius:15px;box-shadow:0 4px 15px rgba(0,0,0,0.1);border-top:5px solid #0033A0}
-.container h2{color:#0033A0;text-align:center;margin-top:0}
-label{font-weight:bold;color:#333;font-size:13px}
-input{width:100%;padding:12px;margin:8px 0 15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
-button{width:100%;background:#0033A0;color:white;padding:13px;border:none;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
-.footer{text-align:center;margin-top:20px;color:#777;font-size:12px}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background: linear-gradient(to bottom, #0a0a0a 0%, #1a8a3a 50%, #22c55e 100%);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.logo-area{
+  margin-top:60px;
+  text-align:center;
+  color:white;
+}
+.logo-area h1{
+  margin:0;
+  font-size:32px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+.logo-area h1 span{color:#22ff66;}
+.logo-area h2{
+  margin:5px 0 0;
+  font-size:18px;
+  letter-spacing:3px;
+}
+.logo-area p{
+  margin:5px 0 0;
+  font-size:11px;
+  color:#7dd8a0;
+  letter-spacing:1px;
+}
+.card{
+  margin-top:40px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:18px;
+  padding:30px 25px;
+  width:90%;
+  max-width:380px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+.card h3{
+  color:white;
+  text-align:center;
+  margin:0 0 20px;
+  font-size:20px;
+}
+input{
+  width:100%;
+  padding:14px 15px;
+  margin-bottom:15px;
+  border:none;
+  border-radius:12px;
+  background: rgba(0,0,0,0.35);
+  color:white;
+  font-size:14px;
+  box-sizing:border-box;
+  outline:none;
+}
+input::placeholder{color:#a0c0a8;}
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#86efac;
+  color:#14532d;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+  letter-spacing:1px;
+  margin-top:5px;
+}
+button:hover{background:#4ade80;}
+.small{color:rgba(255,255,255,0.5);font-size:10px;text-align:center;margin-top:15px;}
 </style>
 </head>
 <body>
-<div class="header">
-<h1>FEDECOMPU ECUADOR</h1>
-<p>Acceso de Alumnos y Docentes</p>
+
+<div class="logo-area">
+  <div style="font-size:35px;">🎓</div>
+  <h1>FEDE<span>COMPU</span></h1>
+  <h2>ECUADOR</h2>
+  <p>REGISTRO DE ESTUDIANTES</p>
 </div>
-<div class="container">
-<h2>INGRESO</h2>
-<label>CEDULA</label>
-<input type="text" placeholder="Ingrese su cedula">
-<label>CLAVE</label>
-<input type="password" placeholder="Ingrese su clave">
-<button>INGRESAR</button>
-<div class="footer">© 2026 FEDECOMPU - Todos los derechos reservados</div>
+
+<div class="card">
+  <h3>🔓 Acceso Docente</h3>
+  <input type="text" placeholder="CEDULA">
+  <input type="password" placeholder="CLAVE">
+  <button>INGRESAR</button>
+  <div class="small">Apellido conectado con éxito...</div>
 </div>
+
 </body>
 </html>
