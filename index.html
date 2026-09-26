@@ -1,114 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FEDECOMPU 24 SEMANAS</title>
+<title>FEDECOMPU - SISTEMA WEB 2026</title>
 <style>
-body{margin:0;font-family:Arial;background:#f0fdf4}
-#login{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#000,#16a34a)}
-.caja{background:rgba(255,255,255,0.15);padding:30px;border-radius:20px;width:350px;text-align:center}
-input{padding:10px;margin:5px;border-radius:8px;border:1px solid #ccc}
-button{padding:10px 15px;background:#16a34a;color:white;border:none;border-radius:8px;cursor:pointer;margin:2px}
-table{border-collapse:collapse;width:100%;font-size:11px;background:white}
-th{background:#111;color:white;padding:6px;position:sticky;top:0}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
+body{background:#f0f2f5}
+.login{max-width:400px;margin:80px auto;background:white;padding:30px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.login input{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px}
+.login button{width:100%;padding:12px;background:#1a3a5f;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+.header{background:#1a3a5f;color:white;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
+.horarios{display:flex;gap:6px;flex-wrap:wrap;padding:12px;background:white}
+.horarios button{padding:8px 14px;border:1px solid #1a3a5f;background:white;border-radius:20px;cursor:pointer;font-weight:bold}
+.horarios button.active{background:#1a3a5f;color:white}
+.fechas-bar{background:#fff3cd;padding:12px;border-bottom:2px solid #ffc107;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fechas-bar input{width:100px;padding:6px;border:1px solid #ccc;border-radius:6px;font-size:12px}
+.controls{padding:12px;background:white;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.controls button{padding:10px 18px;border:none;border-radius:8px;color:white;font-weight:bold;cursor:pointer}
+.btn-add{background:#28a745}.btn-save{background:#007bff}.btn-excel{background:#198754}
+.table-wrap{overflow:auto;background:white;margin:10px;border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:2600px;font-size:12px}
+th{background:#1a3a5f;color:white;padding:8px;position:sticky;top:0}
 td{border:1px solid #ddd;padding:4px;text-align:center}
-.fecha-input{width:110px;background:yellow;padding:4px;font-size:10px;text-align:center;border:1px solid orange}
-.pago-input{width:50px}
-.sticky-left{position:sticky;left:0;background:white;z-index:2}
+td input,td select{width:100%;border:none;padding:4px;text-align:center;font-size:12px}
+.fijo{text-align:left;min-width:160px;background:#f8f9fa}
 </style>
 </head>
 <body>
-
-<div id="login"><div class="caja">
-<h1 style="color:white">FEDE<span style="color:#4ade80">COMPU</span></h1>
-<input id="ced" value="0604772731" style="width:100%"><input id="cla" value="123" style="width:100%">
-<button onclick="entrar()" style="width:100%;background:#86efac;color:#000;font-weight:bold;padding:15px;margin-top:10px">INGRESAR</button>
-</div></div>
+<div id="loginBox" class="login">
+<h2 style="text-align:center;color:#1a3a5f">FEDECOMPU<br>SISTEMA WEB 2026</h2><br>
+<label>CEDULA</label>
+<input id="user" value="0604772731">
+<label>CLAVE</label>
+<input id="pass" type="password" value="fedecompu2018">
+<button onclick="login()">INGRESAR A MI SISTEMA</button>
+<p id="msg" style="color:red;text-align:center;margin-top:10px"></p>
+</div>
 
 <div id="app" style="display:none">
-<div style="background:#111;color:white;padding:10px;display:flex;justify-content:space-between"><b id="info"></b><button onclick="location.reload()">Salir</button></div>
-
-<div style="padding:10px;background:white;border-bottom:2px solid #16a34a">
-<b>Horarios:</b>
-<button onclick="setH('SAB 8@10')">SAB 8@10 (30)</button>
-<button onclick="setH('SAB 10@12')">SAB 10@12 (39)</button>
-<button onclick="setH('SAB 12@2')">SAB 12@2</button>
-<button onclick="setH('SAB 2@4')">SAB 2@4</button>
-<button onclick="setH('SAB 4@6')">SAB 4@6</button>
-<button onclick="setH('DOM 8@10')">DOM 8@10</button>
-<button onclick="setH('DOM 10@12')">DOM 10@12</button>
-<button onclick="setH('DOM 12@2')">DOM 12@2</button>
-<button onclick="setH('DOM 2@4')">DOM 2@4</button>
-<span style="margin-left:20px"><b id="hActual">SAB 8@10</b> <button onclick="add()" style="background:green">+ Agregar Alumno</button></span>
+<div class="header"><h1 id="tit">FEDECOMPU</h1><button onclick="location.reload()" style="background:#c0392b;color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer">Salir</button></div>
+<div class="horarios" id="horDiv"></div>
+<div class="fechas-bar" id="fechasBar"><b>📅 24 FECHAS REALES (Ej: Sáb 15 Nov):</b></div>
+<div class="controls">
+<button class="btn-add" onclick="agregar()">+ AGREGAR ALUMNO</button>
+<button class="btn-save" onclick="guardar()">💾 GUARDAR TODO</button>
+<button class="btn-excel" onclick="exportar()">📊 EXPORTAR EXCEL</button>
+<span id="estado" style="color:green;font-weight:bold"></span>
 </div>
-
-<div style="background:#fff3cd;padding:8px;text-align:center;font-size:11px">
-<b>EDITAR FECHAS DE LAS 24 SEMANAS (EJ: Sab 12 Nov):</b> Usted puede cambiar las fechas aquí abajo y se guardan solas
-<div id="fechasEditor" style="display:flex;gap:2px;overflow:auto;margin-top:5px"></div>
-</div>
-
-<div style="overflow:auto;max-height:70vh">
-<table>
-<thead>
-<tr>
-<th class="sticky-left">COD</th><th>NOMBRE</th><th>CEDULA</th><th>TEL</th><th>DIRECCION</th><th style="background:orange">FALTAS</th><th style="background:#3b82f6">DEBE $</th>
-<th colspan="24">CONTROL 24 SEMANAS - FECHA / ASISTENCIA / PAGO</th>
-</tr>
-<tr id="fechaRow"><th></th><th></th><th></th></tr>
-</thead>
-<tbody id="tbody"></tbody>
-</table>
-</div>
+<div class="table-wrap"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div>
 </div>
 
 <script>
-let H='SAB 8@10';
-let alumnos=JSON.parse(localStorage.getItem('fede')||'[]');
-let fechas=JSON.parse(localStorage.getItem('fechas_fede')||'null') || Array.from({length:24},(_,i)=>Sem ${i+1});
-
-function entrar(){
- let c=document.getElementById('ced').value;
- if(!c)return alert('Cedula');
- document.getElementById('login').style.display='none';
- document.getElementById('app').style.display='block';
- document.getElementById('info').innerText = c=='0604772731'? 'DOCENTE: '+c : 'ESTUDIANTE: '+c;
- pintarFechasEditor(); pintar();
+const HORARIOS=["SAB 8@10","SAB 10@12","SAB 12@2","SAB 2@4","DOM 8@10","DOM 10@12","DOM 12@2","DOM 2@4","SAB-DOM"];
+let hAct="SAB 8@10"; let fechas=Array(24).fill("");
+let alumnos=JSON.parse(localStorage.getItem("fede_final_2018")||"[]");
+if(alumnos.length==0){
+ alumnos=[
+  {codigo:"001",apellidos:"EJEMPLO - JUAN PEREZ",cedula:"0600000001",telefono:"0990000001",direccion:"Riobamba",curso:"BASICO",horario:"SAB 8@10",semanas:Array(24).fill(0).map(()=>({fecha:"",asist:"",valor:""}))},
+  {codigo:"002",apellidos:"EJEMPLO - MARIA LOPEZ",cedula:"0600000002",telefono:"0990000002",direccion:"Riobamba",curso:"BASICO",horario:"SAB 8@10",semanas:Array(24).fill(0).map(()=>({fecha:"",asist:"",valor:""}))}
+ ];
 }
-function setH(h){H=h;document.getElementById('hActual').innerText=h;pintar();}
-function pintarFechasEditor(){
- let div=document.getElementById('fechasEditor'); div.innerHTML='';
- fechas.forEach((f,i)=>{
-   div.innerHTML+=<input class="fecha-input" id="f${i}" value="${f}" onchange="cambiarFecha(${i},this.value)" placeholder="Sem ${i+1}">;
+function login(){
+ if(user.value=="0604772731" && pass.value=="fedecompu2018"){
+  loginBox.style.display="none";app.style.display="block";init();
+ } else {
+  msg.innerText="Cedula o clave incorrecta - Use 0604772731 / fedecompu2018";
+ }
+}
+function init(){
+ horDiv.innerHTML="";
+ HORARIOS.forEach(h=>{
+  let b=document.createElement("button");
+  b.innerText=h+" ("+alumnos.filter(a=>a.horario==h).length+")";
+  if(h==hAct) b.className="active";
+  b.onclick=()=>{hAct=h;init()};
+  horDiv.appendChild(b)
  });
- let row=document.getElementById('fechaRow');
- row.innerHTML='<th></th><th></th><th></th>';
- fechas.forEach(f=>{ row.innerHTML+=<th style="background:yellow;color:black;font-size:9px">${f}</th>; });
+ fechas=JSON.parse(localStorage.getItem("fechas_"+hAct)||JSON.stringify(Array(24).fill("")));
+ fechasBar.innerHTML="<b>📅 24 FECHAS REALES (Ej: Sáb 15 Nov):</b>";
+ for(let i=0;i<24;i++){
+  let inp=document.createElement("input");
+  inp.placeholder="Sem "+(i+1);
+  inp.value=fechas[i]||"";
+  inp.onchange=e=>{fechas[i]=e.target.value;localStorage.setItem("fechas_"+hAct,JSON.stringify(fechas));render()};
+  fechasBar.appendChild(inp)
+ }
+ render()
 }
-function cambiarFecha(i,v){fechas[i]=v;localStorage.setItem('fechas_fede',JSON.stringify(fechas));pintarFechasEditor();}
-function pintar(){
- let tb=document.getElementById('tbody'); tb.innerHTML='';
- let lista=alumnos.filter(a=>a.h==H);
- if(lista.length==0){tb.innerHTML='<tr><td colspan=31 style="padding:20px;text-align:center">No hay alumnos en '+H+' - Dele + Agregar Alumno</td></tr>';return;}
- lista.forEach(a=>{
-   let idx=alumnos.indexOf(a);
-   let f=0;let d=0;for(let i=0;i<24;i++){if(a.asis&&a.asis[i]==false)f++; if(!a.pagos||!a.pagos[i])d+=5;}
-   let tr=<tr><td class="sticky-left"><b>${a.cod}</b></td><td>${a.nom}</td><td>${a.ced}</td><td>${a.tel}</td><td>${a.dir}</td><td style="background:#fef9c3;text-align:center"><b>${f}</b></td><td style="background:#dbeafe;text-align:center"><b>$${d}</b></td>;
-   for(let i=0;i<24;i++){
-     let chk=a.asis&&a.asis[i]!=false?'checked':''; let pag=a.pagos?a.pagos[i]:'';
-     tr+=<td><input type="checkbox" ${chk} onchange="cA(${idx},${i},this.checked)"> <input class="pago-input" value="${pag}" placeholder="$" onchange="cP(${idx},${i},this.value)"></td>;
-   }
-   tr+='</tr>'; tb.innerHTML+=tr;
+function render(){
+ head.innerHTML="";
+ ["CODIGO","APELLIDOS Y NOMBRES","CEDULA","TELEFONO","DIRECCION","CURSO","FALTAS","DEBE $"].forEach(t=>{
+  let th=document.createElement("th");th.innerText=t;head.appendChild(th)
  });
+ for(let i=0;i<24;i++){
+  let th=document.createElement("th");th.innerHTML="SEM "+(i+1)+"<br><small>"+(fechas[i]||"")+"</small>";head.appendChild(th)
+ }
+ body.innerHTML="";
+ alumnos.filter(a=>a.horario==hAct).forEach(al=>{
+  let gi=alumnos.indexOf(al);
+  let faltas=al.semanas.filter(s=>s.asist=="NO").length;
+  let debe=al.semanas.filter(s=>!s.valor).length*5;
+  let tr=document.createElement("tr");
+  tr.innerHTML=`<td><input value="${al.codigo}" onchange="alumnos[${gi}].codigo=this.value"></td>
+  <td class="fijo"><input value="${al.apellidos}" style="text-align:left" onchange="alumnos[${gi}].apellidos=this.value"></td>
+  <td><input value="${al.cedula}" onchange="alumnos[${gi}].cedula=this.value"></td>
+  <td><input value="${al.telefono}" onchange="alumnos[${gi}].telefono=this.value"></td>
+  <td><input value="${al.direccion}" onchange="alumnos[${gi}].direccion=this.value"></td>
+  <td><input value="${al.curso}" onchange="alumnos[${gi}].curso=this.value"></td>
+  <td style="color:red;font-weight:bold">${faltas}</td>
+  <td style="color:red;font-weight:bold">$${debe}</td>`;
+  al.semanas.forEach((s,si)=>{
+   let td=document.createElement("td");
+   td.innerHTML=<input placeholder="fecha" value="${s.fecha}" onchange="alumnos[${gi}].semanas[${si}].fecha=this.value" style="font-size:10px;border-bottom:1px solid #eee"><select onchange="alumnos[${gi}].semanas[${si}].asist=this.value;render()"><option value="">-</option><option ${s.asist=="SI"?"selected":""}>SI</option><option ${s.asist=="NO"?"selected":""}>NO</option></select><input placeholder="$" value="${s.valor}" onchange="alumnos[${gi}].semanas[${si}].valor=this.value;render()" style="border-top:1px solid #eee">;
+   tr.appendChild(td)
+  });
+  body.appendChild(tr)
+ });
+ tit.innerText="FEDECOMPU - "+hAct+" ("+alumnos.filter(a=>a.horario==hAct).length+" alumnos)";
 }
-function add(){
- let cod=prompt('Código:','EST'+(alumnos.length+1)); if(!cod)return;
- let nom=prompt('Nombre:'); let ced=prompt('Cédula:'); let tel=prompt('Teléfono:'); let dir=prompt('Dirección:');
- if(!nom||!ced)return;
- alumnos.push({cod,nom,ced,tel,dir,h:H,asis:Array(24).fill(true),pagos:Array(24).fill('')});
- localStorage.setItem('fede',JSON.stringify(alumnos)); pintar();
-}
-function cA(idx,s,v){alumnos[idx].asis[s]=v;localStorage.setItem('fede',JSON.stringify(alumnos));pintar();}
-function cP(idx,s,v){alumnos[idx].pagos[s]=v;localStorage.setItem('fede',JSON.stringify(alumnos));}
+function agregar(){alumnos.push({codigo:String(alumnos.length+1).padStart(3,"0"),apellidos:"NUEVO ALUMNO",cedula:"",telefono:"",direccion:"",curso:"BASICO",horario:hAct,semanas:Array(24).fill(0).map(()=>({fecha:"",asist:"",valor:""}))});guardar()}
+function guardar(){localStorage.setItem("fede_final_2018",JSON.stringify(alumnos));localStorage.setItem("fechas_"+hAct,JSON.stringify(fechas));estado.innerText="✓ Guardado correctamente";setTimeout(()=>estado.innerText="",2000);init()}
+function exportar(){let csv="CODIGO,APELLIDOS Y NOMBRES,CEDULA,TELEFONO,DIRECCION,CURSO,HORARIO,"+fechas.map((f,i)=>"SEM"+(i+1)+""+f).join(",")+"\n";alumnos.filter(a=>a.horario==hAct).forEach(a=>{csv+=${a.codigo},"${a.apellidos}",${a.cedula},${a.telefono},"${a.direccion}",${a.curso},${a.horario},${a.semanas.map(s=>s.fecha+"|"+s.asist+"|"+s.valor).join(",")}\n});let b=new Blob([csv],{type:"text/csv"});let l=document.createElement("a");l.href=URL.createObjectURL(b);l.download="FEDECOMPU"+hAct+"_fedecompu2018.csv";l.click()}
 </script>
 </body>
+</html>
