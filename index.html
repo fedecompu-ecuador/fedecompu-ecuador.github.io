@@ -3,93 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FEDECOMPU</title>
+<title>FEDECOMPU 24 SEMANAS</title>
 <style>
-body{margin:0;background:linear-gradient(135deg,#000,#16a34a);min-height:100vh;display:flex;justify-content:center;align-items:center;font-family:Arial}
-.caja{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);padding:30px;border-radius:20px;width:350px;text-align:center;border:1px solid rgba(255,255,255,0.2)}
-h1{color:white;margin:0}h1 span{color:#4ade80}
-input{width:100%;padding:15px;margin:8px 0;border-radius:10px;border:none;box-sizing:border-box}
-button{width:100%;padding:15px;background:#86efac;border:none;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:10px}
-#app{display:none;background:white;position:fixed;top:0;left:0;width:100%;height:100%;overflow:auto;padding:10px}
-table{width:100%;border-collapse:collapse;font-size:11px}th{background:#111;color:white;padding:8px}td{border:1px solid #ddd;padding:5px}
+body{margin:0;font-family:Arial;background:#f0fdf4}
+#login{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#000,#16a34a)}
+.caja{background:rgba(255,255,255,0.15);padding:30px;border-radius:20px;width:350px;text-align:center}
+input{padding:10px;margin:5px;border-radius:8px;border:1px solid #ccc}
+button{padding:10px 15px;background:#16a34a;color:white;border:none;border-radius:8px;cursor:pointer;margin:2px}
+table{border-collapse:collapse;width:100%;font-size:11px;background:white}
+th{background:#111;color:white;padding:6px;position:sticky;top:0}
+td{border:1px solid #ddd;padding:4px;text-align:center}
+.fecha-input{width:110px;background:yellow;padding:4px;font-size:10px;text-align:center;border:1px solid orange}
+.pago-input{width:50px}
+.sticky-left{position:sticky;left:0;background:white;z-index:2}
 </style>
 </head>
 <body>
 
-<div id="login" class="caja">
-<h1>FEDE<span>COMPU</span><br><small style="font-size:12px;letter-spacing:3px">ECUADOR</small></h1>
-<p style="color:#86efac;font-size:10px">SISTEMA 24 SEMANAS</p>
-<input id="ced" placeholder="CEDULA" value="0604772731">
-<input id="cla" type="password" placeholder="CLAVE" value="123">
-<button onclick="entrar()">INGRESAR - CLICK AQUI</button>
-<p id="msg" style="color:yellow;font-size:12px"></p>
+<div id="login"><div class="caja">
+<h1 style="color:white">FEDE<span style="color:#4ade80">COMPU</span></h1>
+<input id="ced" value="0604772731" style="width:100%"><input id="cla" value="123" style="width:100%">
+<button onclick="entrar()" style="width:100%;background:#86efac;color:#000;font-weight:bold;padding:15px;margin-top:10px">INGRESAR</button>
+</div></div>
+
+<div id="app" style="display:none">
+<div style="background:#111;color:white;padding:10px;display:flex;justify-content:space-between"><b id="info"></b><button onclick="location.reload()">Salir</button></div>
+
+<div style="padding:10px;background:white;border-bottom:2px solid #16a34a">
+<b>Horarios:</b>
+<button onclick="setH('SAB 8@10')">SAB 8@10 (30)</button>
+<button onclick="setH('SAB 10@12')">SAB 10@12 (39)</button>
+<button onclick="setH('SAB 12@2')">SAB 12@2</button>
+<button onclick="setH('SAB 2@4')">SAB 2@4</button>
+<button onclick="setH('SAB 4@6')">SAB 4@6</button>
+<button onclick="setH('DOM 8@10')">DOM 8@10</button>
+<button onclick="setH('DOM 10@12')">DOM 10@12</button>
+<button onclick="setH('DOM 12@2')">DOM 12@2</button>
+<button onclick="setH('DOM 2@4')">DOM 2@4</button>
+<span style="margin-left:20px"><b id="hActual">SAB 8@10</b> <button onclick="add()" style="background:green">+ Agregar Alumno</button></span>
 </div>
 
-<div id="app">
-<div style="background:#111;color:white;padding:10px;display:flex;justify-content:space-between"><b>FEDECOMPU - <span id="info"></span></b><button onclick="location.reload()" style="width:auto;padding:5px 15px;background:#333;color:white">Salir</button></div>
-
-<div style="padding:10px;background:#f0fdf4">
-<button onclick="setH('SAB 8@10')" style="width:auto">SAB 8@10 (30)</button>
-<button onclick="setH('SAB 10@12')" style="width:auto">SAB 10@12 (39)</button>
-<button onclick="setH('SAB 12@2')" style="width:auto">SAB 12@2</button>
-<button onclick="setH('SAB 2@4')" style="width:auto">SAB 2@4</button>
-<button onclick="setH('SAB 4@6')" style="width:auto">SAB 4@6</button>
-<button onclick="setH('DOM 8@10')" style="width:auto">DOM 8@10</button>
-<button onclick="setH('DOM 10@12')" style="width:auto">DOM 10@12</button>
-<button onclick="setH('DOM 12@2')" style="width:auto">DOM 12@2</button>
-<button onclick="setH('DOM 2@4')" style="width:auto">DOM 2@4</button>
+<div style="background:#fff3cd;padding:8px;text-align:center;font-size:11px">
+<b>EDITAR FECHAS DE LAS 24 SEMANAS (EJ: Sab 12 Nov):</b> Usted puede cambiar las fechas aquí abajo y se guardan solas
+<div id="fechasEditor" style="display:flex;gap:2px;overflow:auto;margin-top:5px"></div>
 </div>
 
-<div style="padding:10px">
-<h3>Horario: <span id="hActual">SAB 8@10</span> - <button onclick="add()" style="width:auto;background:green;color:white;padding:8px 15px">+ Agregar Alumno</button></h3>
-<table><thead><tr><th>COD</th><th>NOMBRE</th><th>CEDULA</th><th>TEL</th><th>DIRECCION</th><th>FALTAS</th><th>DEBE $</th><th>24 SEMANAS (Asistencia y Pago $)</th></tr></thead><tbody id="tbody"></tbody></table>
+<div style="overflow:auto;max-height:70vh">
+<table>
+<thead>
+<tr>
+<th class="sticky-left">COD</th><th>NOMBRE</th><th>CEDULA</th><th>TEL</th><th>DIRECCION</th><th style="background:orange">FALTAS</th><th style="background:#3b82f6">DEBE $</th>
+<th colspan="24">CONTROL 24 SEMANAS - FECHA / ASISTENCIA / PAGO</th>
+</tr>
+<tr id="fechaRow"><th></th><th></th><th></th></tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
 </div>
 </div>
 
 <script>
 let H='SAB 8@10';
 let alumnos=JSON.parse(localStorage.getItem('fede')||'[]');
+let fechas=JSON.parse(localStorage.getItem('fechas_fede')||'null') || Array.from({length:24},(_,i)=>Sem ${i+1});
 
 function entrar(){
-  document.getElementById('msg').innerText='Ingresando...';
-  let c=document.getElementById('ced').value;
-  if(!c){alert('Ponga cedula');return;}
-  document.getElementById('login').style.display='none';
-  document.getElementById('app').style.display='block';
-  document.getElementById('info').innerText = c=='0604772731'? 'DOCENTE' : 'ESTUDIANTE '+c;
-  pintar();
+ let c=document.getElementById('ced').value;
+ if(!c)return alert('Cedula');
+ document.getElementById('login').style.display='none';
+ document.getElementById('app').style.display='block';
+ document.getElementById('info').innerText = c=='0604772731'? 'DOCENTE: '+c : 'ESTUDIANTE: '+c;
+ pintarFechasEditor(); pintar();
 }
 function setH(h){H=h;document.getElementById('hActual').innerText=h;pintar();}
+function pintarFechasEditor(){
+ let div=document.getElementById('fechasEditor'); div.innerHTML='';
+ fechas.forEach((f,i)=>{
+   div.innerHTML+=<input class="fecha-input" id="f${i}" value="${f}" onchange="cambiarFecha(${i},this.value)" placeholder="Sem ${i+1}">;
+ });
+ let row=document.getElementById('fechaRow');
+ row.innerHTML='<th></th><th></th><th></th>';
+ fechas.forEach(f=>{ row.innerHTML+=<th style="background:yellow;color:black;font-size:9px">${f}</th>; });
+}
+function cambiarFecha(i,v){fechas[i]=v;localStorage.setItem('fechas_fede',JSON.stringify(fechas));pintarFechasEditor();}
 function pintar(){
-  let tb=document.getElementById('tbody'); tb.innerHTML='';
-  let lista=alumnos.filter(a=>a.h==H);
-  if(lista.length==0){tb.innerHTML='<tr><td colspan=8 style="text-align:center;padding:20px">No hay alumnos en '+H+' - Dele + Agregar Alumno</td></tr>';return;}
-  lista.forEach(a=>{
-    let idx=alumnos.indexOf(a);
-    let f=0;let d=0;for(let i=0;i<24;i++){if(a.asis&&a.asis[i]==false)f++; if(!a.pagos||!a.pagos[i])d+=5;}
-    let tr='<tr><td>'+a.cod+'</td><td>'+a.nom+'</td><td>'+a.ced+'</td><td>'+a.tel+'</td><td>'+a.dir+'</td><td style="background:yellow;text-align:center">'+f+'</td><td style="background:#dbeafe;text-align:center">$'+d+'</td><td>';
-    for(let i=0;i<24;i++){
-      let chk=a.asis&&a.asis[i]!=false?'checked':'';
-      let pag=a.pagos?a.pagos[i]:'';
-      tr+='S'+(i+1)+':<input type="checkbox" '+chk+' onchange="cA('+idx+','+i+',this.checked)"> <input style="width:40px" value="'+pag+'" placeholder="$" onchange="cP('+idx+','+i+',this.value)"> ';
-    }
-    tr+='</td></tr>';
-    tb.innerHTML+=tr;
-  });
+ let tb=document.getElementById('tbody'); tb.innerHTML='';
+ let lista=alumnos.filter(a=>a.h==H);
+ if(lista.length==0){tb.innerHTML='<tr><td colspan=31 style="padding:20px;text-align:center">No hay alumnos en '+H+' - Dele + Agregar Alumno</td></tr>';return;}
+ lista.forEach(a=>{
+   let idx=alumnos.indexOf(a);
+   let f=0;let d=0;for(let i=0;i<24;i++){if(a.asis&&a.asis[i]==false)f++; if(!a.pagos||!a.pagos[i])d+=5;}
+   let tr=<tr><td class="sticky-left"><b>${a.cod}</b></td><td>${a.nom}</td><td>${a.ced}</td><td>${a.tel}</td><td>${a.dir}</td><td style="background:#fef9c3;text-align:center"><b>${f}</b></td><td style="background:#dbeafe;text-align:center"><b>$${d}</b></td>;
+   for(let i=0;i<24;i++){
+     let chk=a.asis&&a.asis[i]!=false?'checked':''; let pag=a.pagos?a.pagos[i]:'';
+     tr+=<td><input type="checkbox" ${chk} onchange="cA(${idx},${i},this.checked)"> <input class="pago-input" value="${pag}" placeholder="$" onchange="cP(${idx},${i},this.value)"></td>;
+   }
+   tr+='</tr>'; tb.innerHTML+=tr;
+ });
 }
 function add(){
-  let cod=prompt('Código:','EST'+(alumnos.length+1));
-  let nom=prompt('Nombre completo:');
-  let ced=prompt('Cédula:');
-  let tel=prompt('Teléfono:');
-  let dir=prompt('Dirección:');
-  if(!nom||!ced)return;
-  alumnos.push({cod,nom,ced,tel,dir,h:H,asis:Array(24).fill(true),pagos:Array(24).fill('')});
-  localStorage.setItem('fede',JSON.stringify(alumnos));
-  pintar();
+ let cod=prompt('Código:','EST'+(alumnos.length+1)); if(!cod)return;
+ let nom=prompt('Nombre:'); let ced=prompt('Cédula:'); let tel=prompt('Teléfono:'); let dir=prompt('Dirección:');
+ if(!nom||!ced)return;
+ alumnos.push({cod,nom,ced,tel,dir,h:H,asis:Array(24).fill(true),pagos:Array(24).fill('')});
+ localStorage.setItem('fede',JSON.stringify(alumnos)); pintar();
 }
 function cA(idx,s,v){alumnos[idx].asis[s]=v;localStorage.setItem('fede',JSON.stringify(alumnos));pintar();}
 function cP(idx,s,v){alumnos[idx].pagos[s]=v;localStorage.setItem('fede',JSON.stringify(alumnos));}
 </script>
 </body>
-</html>
