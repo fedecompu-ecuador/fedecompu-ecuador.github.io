@@ -3,58 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FEDECOMPU ECUADOR</title>
+<title>FEDECOMPU ECUADOR - SISTEMA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(to bottom,#000000 0%,#16a34a 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.logo{text-align:center;color:white;margin-bottom:20px}
-.logo h1{margin:0;font-size:32px} .logo h1 span{color:#4ade80}
-.card{background:rgba(255,255,255,0.12);padding:30px;border-radius:18px;width:90%;max-width:360px;text-align:center}
-.card h3{color:white;margin-top:0}
-input{width:100%;padding:14px;margin-bottom:12px;border-radius:10px;border:none;background:rgba(0,0,0,0.4);color:white;box-sizing:border-box}
-button{width:100%;padding:14px;border-radius:10px;border:none;background:#86efac;color:#14532d;font-weight:bold;font-size:16px;cursor:pointer}
-#panel{display:none;background:white;padding:30px;border-radius:18px;width:90%;max-width:500px;text-align:center}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+body{font-family:'Inter',sans-serif;background:#f0fdf4}
+.semana-input{width:55px;text-align:center}
+.tabla-excel{font-size:11px}
 </style>
 </head>
-<body>
+<body class="min-h-screen">
 
-<div id="login-box" class="logo">
-  <h1>FEDE<span>COMPU</span><br>ECUADOR</h1>
-  <p style="color:#86efac;font-size:11px;">REGISTRO DE ESTUDIANTES</p>
-  <div class="card">
-    <h3>🔓 Acceso Docente</h3>
-    <input id="cedula" type="text" placeholder="CEDULA Ej: 0604772731">
-    <input id="clave" type="password" placeholder="CLAVE">
-    <button onclick="ingresar()">INGRESAR</button>
-    <p style="color:rgba(255,255,255,0.6);font-size:10px;margin-top:10px;">Prueba: ponga cualquier cédula y clave</p>
+<!-- LOGIN -->
+<div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-green-900 to-green-500 p-4">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8 text-white">
+      <div class="text-5xl mb-3">🎓</div>
+      <h1 class="text-4xl font-extrabold">FEDE<span class="text-green-400">COMPU</span></h1>
+      <h2 class="tracking-[4px] mt-1">ECUADOR</h2>
+      <p class="text-green-300 text-xs mt-2 tracking-widest">SISTEMA DE CONTROL 24 SEMANAS</p>
+    </div>
+    <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-[24px] p-8 shadow-2xl">
+      <h3 class="text-white text-center font-bold text-xl mb-6"><i class="fa-solid fa-lock"></i> Acceso</h3>
+      <input id="cedula" class="w-full p-4 rounded-xl bg-black/40 text-white mb-3 outline-none border border-white/10" placeholder="CEDULA (Ej: 0604772731 para docente)">
+      <input id="clave" type="password" class="w-full p-4 rounded-xl bg-black/40 text-white mb-4 outline-none border border-white/10" placeholder="CLAVE (cualquier clave)">
+      <button onclick="login()" class="w-full bg-gradient-to-r from-green-300 to-emerald-400 text-green-900 font-extrabold p-4 rounded-xl hover:scale-[1.02] transition">INGRESAR</button>
+      <p class="text-white/50 text-[10px] text-center mt-4">Docente: use su cédula 0604772731<br>Alumno: use su cédula registrada</p>
+    </div>
   </div>
 </div>
 
-<div id="panel">
-  <h2 style="color:#16a34a;">¡Bienvenido Profe! ✅</h2>
-  <p>Usted ingresó correctamente con la cédula: <b id="mostrarCedula"></b></p>
-  <p>Este es el panel de FEDECOMPU</p>
-  <button onclick="salir()" style="background:#16a34a;color:white;">SALIR</button>
+<!-- APP -->
+<div id="appPage" class="hidden">
+  <!-- HEADER BANCO -->
+  <div class="bg-gradient-to-r from-slate-900 to-green-700 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg">
+    <div class="flex items-center gap-3">
+      <div class="bg-white text-green-700 w-10 h-10 rounded-xl flex items-center justify-center font-black">F</div>
+      <div><p class="font-black leading-none">FEDECOMPU ECUADOR</p><p id="userInfo" class="text-[10px] text-green-200"></p></div>
+    </div>
+    <button onclick="logout()" class="bg-white/20 px-4 py-2 rounded-full text-sm"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+  </div>
+
+  <!-- HORARIOS TABS -->
+  <div class="p-3 bg-white shadow flex gap-2 overflow-x-auto">
+    <button onclick="cambiarHorario('SAB 8@10')" class="horario-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold bg-green-600 text-white" data-h="SAB 8@10">SÁB 8@10 (30)</button>
+    <button onclick="cambiarHorario('SAB 10@12')" class="horario-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold bg-slate-200" data-h="SAB 10@12">SÁB 10@12 (39)</button>
+    <button onclick="cambiarHorario('SAB 12@2')" class="horario-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold bg-slate-200" data-h="SAB 12@2">SÁB 12@2</button>
+    <button onclick="cambiarHorario('SAB 2@4')" class="horario-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold bg-slate-200" data-h="SAB 2@4">SÁB 2@4</button>
+    <button onclick="cambiarHorario('SAB 4@6')" class="horario-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold bg-slate-200" data-h="SAB 4@6">SÁB 4@6</button>
+    <button onclick="cambiarHorario('DOM 8@10')" class="horario-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold bg-slate-200" data-h="DOM 8@10">DOM 8@10</button>
+    <button onclick="cambiarHorario('DOM 10@12')" class="horario-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold bg-slate-200" data-h="DOM 10@12">DOM 10@12</button>
+    <button onclick="cambiarHorario('DOM 12@2')" class="horario-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold bg-slate-200" data-h="DOM 12@2">DOM 12@2</button>
+    <button onclick="cambiarHorario('DOM 2@4')" class="horario-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold bg-slate-200" data-h="DOM 2@4">DOM 2@4</button>
+  </div>
+
+  <!-- CONTROLES DOCENTE -->
+  <div id="docenteControles" class="p-4 bg-green-50 border-b flex flex-wrap gap-2 items-center">
+    <button onclick="abrirModal()" class="bg-green-600 text-white px-5 py-2 rounded-xl font-bold text-sm"><i class="fa-solid fa-plus"></i> Agregar Estudiante</button>
+    <div class="ml-auto flex gap-2 text-[11px]"><span class="bg-white px-3 py-1 rounded-full border">Total: <b id="totalAlumnos">0</b></span><span class="bg-green-100 px-3 py-1 rounded-full">Horario: <b id="horarioActual">SAB 8@10</b></span></div>
+  </div>
+
+  <!-- TABLA TIPO EXCEL -->
+  <div class="p-2 overflow-auto">
+    <table class="w-full bg-white rounded-xl shadow overflow-hidden tabla-excel">
+      <thead class="bg-slate-900 text-white text-[10px]">
+        <tr>
+          <th class="p-2 sticky left-0 bg-slate-900">CÓD</th>
+          <th class="p-2 sticky left-[45px] bg-slate-900 min-w-[140px]">NOMBRE</th>
+          <th class="p-2 min-w-[100px]">CÉDULA</th>
+          <th class="p-2 min-w-[90px]">TELÉFONO</th>
+          <th class="p-2 min-w-[120px]">DIRECCIÓN</th>
+          <th class="p-2 bg-yellow-500 text-black">FALTAS</th>
+          <th class="p-2 bg-blue-600">DEBE $</th>
+          <!-- 24 SEMANAS -->
+          <th colspan="2" class="bg-green-700 text-[9px]">SEM 1</th><th colspan="2" class="bg-green-700">SEM 2</th><th colspan="2" class="bg-green-700">SEM 3</th><th colspan="2" class="bg-green-700">SEM 4</th><th colspan="2" class="bg-green-700">SEM 5</th><th colspan="2" class="bg-green-700">SEM 6</th><th colspan="2" class="bg-green-600">SEM 7</th><th colspan="2" class="bg-green-600">SEM 8</th><th colspan="2" class="bg-green-600">SEM 9</th><th colspan="2" class="bg-green-600">SEM 10</th><th colspan="2" class="bg-green-600">SEM 11</th><th colspan="2" class="bg-green-600">SEM 12</th><th colspan="2" class="bg-emerald-700">SEM 13</th><th colspan="2" class="bg-emerald-700">SEM 14</th><th colspan="2" class="bg-emerald-700">SEM 15</th><th colspan="2" class="bg-emerald-700">SEM 16</th><th colspan="2" class="bg-emerald-700">SEM 17</th><th colspan="2" class="bg-emerald-700">SEM 18</th><th colspan="2" class="bg-teal-700">SEM 19</th><th colspan="2" class="bg-teal-700">SEM 20</th><th colspan="2" class="bg-teal-700">SEM 21</th><th colspan="2" class="bg-teal-700">SEM 22</th><th colspan="2" class="bg-teal-700">SEM 23</th><th colspan="2" class="bg-teal-700">SEM 24</th>
+        </tr>
+        <tr class="bg-slate-800 text-[8px]">
+          <th></th><th></th><th></th>
+          <th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th><th>A</th><th>$</th>
+        </tr>
+      </thead>
+      <tbody id="tablaBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR -->
+<div id="modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-[100]">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-lg">
+    <h3 class="font-black text-lg mb-4 text-green-700">Agregar Estudiante a <span id="modalHorario"></span></h3>
+    <div class="grid grid-cols-2 gap-3">
+      <input id="m_codigo" placeholder="Código Ej: EST001" class="p-3 border rounded-xl">
+      <input id="m_nombre" placeholder="Nombre completo" class="p-3 border rounded-xl col-span-2">
+      <input id="m_cedula" placeholder="Cédula" class="p-3 border rounded-xl">
+      <input id="m_telefono" placeholder="Teléfono" class="p-3 border rounded-xl">
+      <input id="m_direccion" placeholder="Dirección" class="p-3 border rounded-xl col-span-2">
+    </div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="guardarEstudiante()" class="flex-1 bg-green-600 text-white p-3 rounded-xl font-bold">Guardar</button>
+      <button onclick="cerrarModal()" class="flex-1 bg-slate-200 p-3 rounded-xl">Cancelar</button>
+    </div>
+  </div>
 </div>
 
 <script>
-function ingresar(){
-  var cedula = document.getElementById("cedula").value;
-  var clave = document.getElementById("clave").value;
-  if(cedula == "" || clave == ""){
-    alert("Por favor escriba cédula y clave");
-    return;
-  }
-  document.getElementById("mostrarCedula").innerText = cedula;
-  document.getElementById("login-box").style.display = "none";
-  document.getElementById("panel").style.display = "block";
-}
-function salir(){
-  document.getElementById("panel").style.display = "none";
-  document.getElementById("login-box").style.display = "block";
-  document.getElementById("cedula").value = "";
-  document.getElementById("clave").value = "";
-}
-</script>
+let horarioActivo = 'SAB 8@10';
+let esDocente = false;
+let estudiantes = JSON.parse(localStorage.getItem('fedecompu_db') || '[]');
 
+function login(){
+  const ced = document.getElementById('cedula').value.trim();
+  if(!ced){ alert('Ponga su cédula'); return; }
+  // DOCENTE ES 0604772731
+  if(ced === '0604772731'){
+    esDocente = true;
+    document.getElementById('userInfo').innerText = 'DOCENTE - ' + ced;
+    document.getElementById('docenteControles').style.display='flex';
+  } else {
+    // Ver si es alumno existente
+    const alumno = estudiantes.find(e=>e.cedula===ced);
+    if(!alumno){ alert('Cédula no registrada como estudiante. Solo docente puede registrar.'); return; }
+    esDocente = false;
+    document.getElementById('userInfo').innerText = 'ESTUDIANTE: ' + alumno.nombre + ' - SOLO LECTURA';
+    document.getElementById('docenteControles').style.display='none';
+    // Filtrar solo ese alumno
+    horarioActivo = alumno.horario;
+  }
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('appPage').classList.remove('hidden');
+  render();
+}
+
+function logout(){ location.reload(); }
+
+function cambiarHorario(h){
+  horarioActivo = h;
+  document.querySelectorAll('.horario-btn').forEach(b=>{ b.classList.remove('bg-green-600','text-white'); b.classList.add('bg-slate-200'); if(b.dataset.h===h){ b.classList.add('bg-green-600','text-white'); b.classList.remove('bg-slate-200'); }});
+  document.getElementById('horarioActual').innerText=h;
+  document.getElementById('modalHorario').innerText=h;
+  render();
+}
+
+function render(){
+  const body = document.getElementById('tablaBody');
+  body.innerHTML='';
+  let lista = estudiantes.filter(e=>e.horario===horarioActivo);
+  // Si es estudiante, solo mostrar el mismo
+  if(!esDocente){
+    const ced = document.getElementById('cedula').value.trim();
+    lista = estudiantes.filter(e=>e.cedula===ced);
+  }
+  document.getElementById('totalAlumnos').innerText = estudiantes.filter(e=>e.horario===horarioActivo).length;
+  lista.forEach((est, idxGlobal)=>{
+    const idx = estudiantes.indexOf(est);
+    let faltas = 0; let debe = 0;
+    for(let s=0;s<24;s++){ if(est.asistencias && est.asistencias[s]===false) faltas++; if(!est.pagos ||!est.pagos[s] || est.pagos[s]==0) debe+=5; } // Asume $5 por semana
+    let row = `<tr class="border-b hover:bg-green-50">
+      <td class="p-1 sticky left-0 bg-white font-bold">${est.codigo}</td>
+      <td class="p-1 sticky left-[45px] bg-white min-w-[140px]">${est.nombre}</td>
+      <td class="p-1">${est.cedula}</td>
+      <td class="p-1">${est.telefono}</td>
+      <td class="p-1">${est.direccion}</td>
+      <td class="p-1 text-center bg-yellow-100 font-bold">${faltas}</td>
+      <td class="p-1 text-center bg-blue-100 font-bold">$${debe}</td>`;
+    for(let s=0;s<24;s++){
+      const asist = est.asistencias? est.asistencias[s] : true;
+      const pago = est.pagos? est.pagos[s] : '';
+      row+=`<td class="p-0"><input type="checkbox" ${asist?'checked':''} ${!esDocente?'disabled':''} onchange="cambiarAsist(${idx},${s},this.checked)" class="w-5 h-5"></td>
+            <td class="p-0"><input value="${pago}" ${!esDocente?'disabled':''} onchange="cambiarPago(${idx},${s},this.value)" placeholder="$" class="semana-input border p-1 text-[10px]"></td>`;
+    }
+    row+= esDocente? <td><button onclick="borrar(${idx})" class="text-red-500 px-2"><i class="fa-solid fa-trash"></i></button></td></tr> : </tr>;
+    body.innerHTML+=row;
+  });
+  if(lista.length===0){ body.innerHTML=<tr><td colspan="100" class="p-8 text-center text-slate-400">No hay estudiantes en ${horarioActivo}. ${esDocente?'Agregue el primero con el botón verde.':' '}</td></tr>; }
+}
+
+function abrirModal(){ document.getElementById('modalHorario').innerText=horarioActivo; document.getElementById('modal').classList.remove('hidden'); }
+function cerrarModal(){ document.getElementById('modal').classList.add('hidden'); }
+function guardarEstudiante(){
+  const codigo = document.getElementById('m_codigo').value || 'EST'+(estudiantes.length+1);
+  const nombre = document.getElementById('m_nombre').value;
+  const cedula = document.getElementById('m_cedula').value;
+  const telefono = document.getElementById('m_telefono').value;
+  const direccion = document.getElementById('m_direccion').value;
+  if(!nombre ||!cedula){ alert('Nombre y cédula obligatorios'); return; }
+  estudiantes.push({codigo,nombre,cedula,telefono,direccion,horario:horarioActivo,asistencias:Array(24).fill(true),pagos:Array(24).fill('')});
+  localStorage.setItem('fedecompu_db', JSON.stringify(estudiantes));
+  cerrarModal();
+  document.getElementById('m_nombre').value=''; document.getElementById('m_cedula').value=''; document.getElementById('m_telefono').value=''; document.getElementById('m_direccion').value=''; document.getElementById('m_codigo').value='';
+  render();
+}
+function cambiarAsist(idx,sem,val){ estudiantes[idx].asistencias[sem]=val; localStorage.setItem('fedecompu_db', JSON.stringify(estudiantes)); render(); }
+function cambiarPago(idx,sem,val){ estudiantes[idx].pagos[sem]=val; localStorage.setItem('fedecompu_db', JSON.stringify(estudiantes)); render(); }
+function borrar(idx){ if(confirm('¿Borrar estudiante?')){ estudiantes.splice(idx,1); localStorage.setItem('fedecompu_db', JSON.stringify(estudiantes)); render(); } }
+
+cambiarHorario('SAB 8@10');
+</script>
 </body>
 </html>
