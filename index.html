@@ -5,50 +5,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FEDECOMPU ECUADOR</title>
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(to bottom,#0a0a0a 0%,#15803d 50%,#22c55e 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center}
-.logo-area{margin-top:60px;text-align:center;color:white}
-.logo-area h1{margin:0;font-size:32px;font-weight:800}
-.logo-area h1 span{color:#4ade80}
-.logo-area h2{margin:5px 0 0;font-size:18px;letter-spacing:3px}
-.logo-area p{margin:5px 0 0;font-size:11px;color:#86efac}
-.card{margin-top:40px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:30px 25px;width:90%;max-width:380px}
-.card h3{color:white;text-align:center;margin:0 0 20px}
-input{width:100%;padding:14px;margin-bottom:15px;border:none;border-radius:12px;background:rgba(0,0,0,0.4);color:white;box-sizing:border-box;outline:none}
-input::placeholder{color:#a0c0a8}
-button{width:100%;padding:14px;border:none;border-radius:12px;background:#86efac;color:#14532d;font-weight:bold;font-size:16px;cursor:pointer}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(to bottom,#000000 0%,#16a34a 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.logo{text-align:center;color:white;margin-bottom:20px}
+.logo h1{margin:0;font-size:32px} .logo h1 span{color:#4ade80}
+.card{background:rgba(255,255,255,0.12);padding:30px;border-radius:18px;width:90%;max-width:360px;text-align:center}
+.card h3{color:white;margin-top:0}
+input{width:100%;padding:14px;margin-bottom:12px;border-radius:10px;border:none;background:rgba(0,0,0,0.4);color:white;box-sizing:border-box}
+button{width:100%;padding:14px;border-radius:10px;border:none;background:#86efac;color:#14532d;font-weight:bold;font-size:16px;cursor:pointer}
+#panel{display:none;background:white;padding:30px;border-radius:18px;width:90%;max-width:500px;text-align:center}
 </style>
 </head>
 <body>
-<div class="logo-area">
-<div style="font-size:35px;">🎓</div>
-<h1>FEDE<span>COMPU</span></h1>
-<h2>ECUADOR</h2>
-<p>REGISTRO DE ESTUDIANTES</p>
+
+<div id="login-box" class="logo">
+  <h1>FEDE<span>COMPU</span><br>ECUADOR</h1>
+  <p style="color:#86efac;font-size:11px;">REGISTRO DE ESTUDIANTES</p>
+  <div class="card">
+    <h3>🔓 Acceso Docente</h3>
+    <input id="cedula" type="text" placeholder="CEDULA Ej: 0604772731">
+    <input id="clave" type="password" placeholder="CLAVE">
+    <button onclick="ingresar()">INGRESAR</button>
+    <p style="color:rgba(255,255,255,0.6);font-size:10px;margin-top:10px;">Prueba: ponga cualquier cédula y clave</p>
+  </div>
 </div>
 
-<div class="card">
-<h3>🔓 Acceso Docente</h3>
-<input id="cedula" type="text" placeholder="CEDULA">
-<input id="clave" type="password" placeholder="CLAVE">
-<button onclick="ingresar()">INGRESAR</button>
+<div id="panel">
+  <h2 style="color:#16a34a;">¡Bienvenido Profe! ✅</h2>
+  <p>Usted ingresó correctamente con la cédula: <b id="mostrarCedula"></b></p>
+  <p>Este es el panel de FEDECOMPU</p>
+  <button onclick="salir()" style="background:#16a34a;color:white;">SALIR</button>
 </div>
 
 <script>
 function ingresar(){
   var cedula = document.getElementById("cedula").value;
   var clave = document.getElementById("clave").value;
-  
   if(cedula == "" || clave == ""){
-    alert("Por favor ingrese su cédula y clave");
+    alert("Por favor escriba cédula y clave");
     return;
   }
-  
-  // Aquí es donde usted puede poner su cédula y clave correcta
-  // Por ahora deja entrar a todos
-  alert("¡Bienvenido! Ingresando con cédula: " + cedula);
-  
-  // Aquí le puede mandar a otra página, por ejemplo:
-  // window.location.href = "panel.html";
+  document.getElementById("mostrarCedula").innerText = cedula;
+  document.getElementById("login-box").style.display = "none";
+  document.getElementById("panel").style.display = "block";
+}
+function salir(){
+  document.getElementById("panel").style.display = "none";
+  document.getElementById("login-box").style.display = "block";
+  document.getElementById("cedula").value = "";
+  document.getElementById("clave").value = "";
 }
 </script>
 
